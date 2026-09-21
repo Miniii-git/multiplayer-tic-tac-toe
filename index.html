@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tic Tac Toe</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <div id="lobbyScreen">
+      <h1>Tic Tac Toe</h1>
+      <button id="playButton">Play</button>
+    </div>
+
+    <!------------------------------------------------------->
+
+    <div id="waitingScreen">
+      <h2>Finding an opponent...</h2>
+
+      <button id="cancelSearch">Cancel</button>
+    </div>
+
+    <!------------------------------------------------------->
+
+    <div id="matchFoundScreen">
+      <h2>Opponent Found!</h2>
+      <p>Get ready...</p>
+      <p id="countdown">3</p>
+    </div>
+
+    <!------------------------------------------------------->
+
+    <div id="gameScreen">
+      <button id="leaveGame">Leave Game</button>
+
+      <div id="notification"></div>
+
+      <h1>Tic Tac Toe</h1>
+
+      <div class="game">
+        <button class="cell"></button>
+        <button class="cell"></button>
+        <button class="cell"></button>
+
+        <button class="cell"></button>
+        <button class="cell"></button>
+        <button class="cell"></button>
+
+        <button class="cell"></button>
+        <button class="cell"></button>
+        <button class="cell"></button>
+      </div>
+
+      <p id="message">Player X's turn</p>
+
+      <button id="restart">Restart</button>
+    </div>
+
+    <!------------------------------------------------------->
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
