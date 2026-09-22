@@ -137,6 +137,11 @@ io.on("connection", function (socket) {
     console.log("Opponent found!");
 
     io.to(roomId).emit("matchFound");
+
+    setTimeout(function () {
+      io.to(roomId).emit("startGame");
+    }, 4500);
+
     waitingPlayer = null;
 
     io.to(roomId).emit("changeTurn", rooms[roomId].currentPlayer);

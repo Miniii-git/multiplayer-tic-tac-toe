@@ -127,12 +127,16 @@ function setupSocketListeners() {
       timeLeft--;
       if (timeLeft === 0) {
         clearInterval(countdownInterval);
-        matchFoundScreen.style.display = "none";
-        gameScreen.style.display = "block";
         return;
       }
       countdown.textContent = timeLeft;
     }, 1500);
+  });
+  //→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→
+
+  socket.on("startGame", function () {
+    matchFoundScreen.style.display = "none";
+    gameScreen.style.display = "block";
   });
 }
 //▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼
