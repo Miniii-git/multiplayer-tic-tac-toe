@@ -92,6 +92,7 @@ io.on("connection", function (socket) {
     socket.emit("player", reconnectPlayer);
     socket.emit("syncBoard", game.board);
     socket.emit("changeTurn", game.currentPlayer);
+    socket.emit("startGame");
     if (game.gameOver) {
       if (game.gameResult === "draw") {
         socket.emit("gameDraw");
