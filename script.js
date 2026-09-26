@@ -135,6 +135,7 @@ function setupSocketListeners() {
   //→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→
 
   socket.on("startGame", function () {
+    waitingScreen.style.display = "none";
     matchFoundScreen.style.display = "none";
     gameScreen.style.display = "block";
   });
