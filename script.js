@@ -42,6 +42,10 @@ const message = document.querySelector("#message");
 const restart = document.querySelector("#restart");
 const notification = document.querySelector("#notification");
 const leaveGame = document.querySelector("#leaveGame");
+const gameMyUsername = document.querySelector("#gameMyUsername");
+const gameMySymbol = document.querySelector("#gameMySymbol");
+const gameOpponentUsername = document.querySelector("#gameOpponentUsername");
+const gameOpponentSymbol = document.querySelector("#gameOpponentSymbol");
 
 //▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲
 
@@ -58,14 +62,24 @@ if (username === null || countryCode === null) {
 function setupSocketListeners() {
   socket.on("player", function (player) {
     myPlayer = player;
+
+    // Match Found screen
     myUsername.textContent = countryCodeToFlag(countryCode) + " " + username;
     mySymbol.textContent = myPlayer;
 
+    // Game screen
+    gameMyUsername.textContent =
+      countryCodeToFlag(countryCode) + " " + username;
+    gameMySymbol.textContent = myPlayer;
+
     if (myPlayer === "X") {
       opponentSymbol.textContent = "O";
+      gameOpponentSymbol.textContent = "O";
     } else {
       opponentSymbol.textContent = "X";
+      gameOpponentSymbol.textContent = "X";
     }
+
     console.log("You are player:", myPlayer);
   });
   //→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→
@@ -75,6 +89,8 @@ function setupSocketListeners() {
     opponentCountryCode = data.countryCode;
 
     opponentName.textContent =
+      countryCodeToFlag(opponentCountryCode) + " " + opponentUsername;
+    gameOpponentUsername.textContent =
       countryCodeToFlag(opponentCountryCode) + " " + opponentUsername;
 
     console.log("Opponent username:", opponentUsername);
