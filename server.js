@@ -65,6 +65,8 @@ function checkDrawServer(board) {
 
 io.on("connection", function (socket) {
   const playerId = socket.handshake.auth.playerId;
+  const username = socket.handshake.auth.username;
+  const countryCode = socket.handshake.auth.countryCode;
 
   let reconnectRoomId = null;
   let reconnectPlayer = "";
@@ -107,6 +109,8 @@ io.on("connection", function (socket) {
     waitingPlayer = {
       socketId: socket.id,
       playerId: playerId,
+      username: username,
+      countryCode: countryCode,
     };
     console.log("Player is waiting:", waitingPlayer);
   } else if (reconnectRoomId === null) {
@@ -127,6 +131,12 @@ io.on("connection", function (socket) {
       playerXId: waitingPlayer.playerId,
       playerOId: playerId,
 
+      playerXUsername: waitingPlayer.username,
+      playerOUsername: username,
+
+      playerXCountryCode: waitingPlayer.countryCode,
+      playerOCountryCode: countryCode,
+
       board: ["", "", "", "", "", "", "", "", ""],
       currentPlayer: "X",
       gameOver: false,
@@ -135,6 +145,17 @@ io.on("connection", function (socket) {
 
     firstSocket.emit("player", "X");
     socket.emit("player", "O");
+
+    firstSocket.emit("opponentInfo", {
+      username: username,
+      countryCode: countryCode,
+    });
+
+    socket.emit("opponentInfo", {
+      username: waitingPlayer.username,
+      countryCode: waitingPlayer.countryCode,
+    });
+
     console.log("Opponent found!");
 
     io.to(roomId).emit("matchFound");

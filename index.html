@@ -8,6 +8,25 @@
   </head>
 
   <body>
+    <div id="profileSetupScreen">
+      <h1>Tic Tac Toe</h1>
+      <h2>Create your profile</h2>
+      <input
+        type="text"
+        id="usernameInput"
+        placeholder="Enter your username"
+        maxlength="20"
+      />
+      <label for="countrySelect">Country</label>
+
+      <select id="countrySelect">
+        <option value="">Select your country</option>
+      </select>
+      <button id="saveProfileButton">Continue</button>
+    </div>
+
+    <!------------------------------------------------------->
+
     <div id="lobbyScreen">
       <h1>Tic Tac Toe</h1>
       <button id="playButton">Play</button>
@@ -25,6 +44,19 @@
 
     <div id="matchFoundScreen">
       <h2>Opponent Found!</h2>
+      <div id="playersMatchup">
+        <div>
+          <p id="myUsername"></p>
+          <p id="mySymbol"></p>
+        </div>
+
+        <p>VS</p>
+
+        <div>
+          <p id="opponentName"></p>
+          <p id="opponentSymbol"></p>
+        </div>
+      </div>
       <p>Get ready...</p>
       <p id="countdown">3</p>
     </div>
