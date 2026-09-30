@@ -13,6 +13,16 @@ const myServer = http.createServer(app);
 const io = new Server(myServer);
 /* create a Socket.IO server and connect it to my HTTP server  */
 
+const { initializeApp, cert } = require("firebase-admin/app");
+const { getAuth } = require("firebase-admin/auth");
+const serviceAccount = require("./serviceAccountKey.json");
+
+initializeApp({
+  credential: cert(serviceAccount),
+});
+
+console.log("Firebase Admin initialized");
+
 //▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲
 //سوکت ایدی با ریکانکت عوض می‌شود، ولی  و پلیر آیدی قرار است هویت اصلی بازیکن را نگه دارند.
 
@@ -61,10 +71,26 @@ function checkDrawServer(board) {
   });
 }
 //▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲
-// وقتی سرور کانکت میشه دستور هایی که اجرا میشن روی سرور انواع سوکت ها
 
+io.use(async function (socket, next) {
+  try {
+    const token = socket.handshake.auth.token;
+    if (!token) {
+      return next(new Error("Authentication token missing"));
+    }
+    const decodedToken = await getAuth().verifyIdToken(token);
+    socket.userId = decodedToken.uid;
+    console.log("Authenticated user:", socket.userId);
+    next();
+  } catch (error) {
+    console.log("Socket authentication failed:", error.message);
+    next(new Error("Authentication failed"));
+  }
+});
+
+// وقتی سرور کانکت میشه دستور هایی که اجرا میشن روی سرور انواع سوکت ها
 io.on("connection", function (socket) {
-  const playerId = socket.handshake.auth.playerId;
+  const playerId = socket.userId;
   const username = socket.handshake.auth.username;
   const countryCode = socket.handshake.auth.countryCode;
 
@@ -172,46 +198,7 @@ io.on("connection", function (socket) {
     console.log("Created room:", roomId);
     console.log("Rooms:", rooms);
   }
-  /*
-  if (playerId === playerXId) {
-    playerX = socket.id;
-    socket.emit("player", "X");
-    socket.broadcast.emit("playerConnected");
-  } else if (playerId === playerOId) {
-    playerO = socket.id;
-    socket.emit("player", "O");
-    socket.broadcast.emit("playerConnected");
-  } else if (playerX === null) {
-    playerX = socket.id;
-    playerXId = playerId;
-    socket.emit("player", "X");
-  } else if (playerO === null) {
-    playerO = socket.id;
-    playerOId = playerId;
-    socket.emit("player", "O");
-  } else {
-    socket.emit("gameFull"); // اینجا ترتیب مهم است: اول میگیم بازی پر است و بعد سرور را از ان قطع میکنیم.
-    socket.disconnect();
-    return;
-  }
-*/
-  //→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→
 
-  //socket.emit("changeTurn", currentPlayer);
-
-  //→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→
-
-  //socket.emit("syncBoard", board);
-
-  //→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→
-
-  /*if (gameOver) {
-    if (gameResult === "draw") {
-      socket.emit("gameDraw");
-    } else {
-      socket.emit("gameWinner", gameResult);
-    }
-  }*/
   //→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→
 
   socket.on("disconnect", function () {

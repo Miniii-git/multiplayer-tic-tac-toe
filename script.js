@@ -1,14 +1,48 @@
+//جموعه ابزارهایی که یک سرویس در اختیار برنامه‌نویس می‌گذارد تا بتواند از آن سرویس داخل برنامه‌اش استفاده کند  = SDK Software Development Kit
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
+  onAuthStateChanged,
+  signOut,
+} from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  setDoc,
+} from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBWJht0noHEfdmAY1lC-nZ03hXYYzKe20s",
+  authDomain: "multiplayer-tic-tac-toe-2fb02.firebaseapp.com",
+  projectId: "multiplayer-tic-tac-toe-2fb02",
+  storageBucket: "multiplayer-tic-tac-toe-2fb02.firebasestorage.app",
+  messagingSenderId: "811345451279",
+  appId: "1:811345451279:web:5438de71766dd04fb9c67a",
+};
+
+const firebaseApp = initializeApp(firebaseConfig); // فایربیس را با تنظیمات پروژه‌ی من راه‌اندازی کن
+
+const auth = getAuth(firebaseApp); // را بده FirebaseApp مربوط به همین Authentication سیستم
+const db = getFirestore(firebaseApp); // را بده FirebaseApp مربوط به همین Firestore دیتا بیس
+
+const googleProvider = new GoogleAuthProvider();
+
+//▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲
+
 //socket.on("bbbbbb", function(){})   socket.emit("bbbbbb")
 //socket.on("aaaaaa", function(done){})   socket.emit("aaaaaa" , callbackfunction)
 console.log("script.js loaded");
 
-let playerId = localStorage.getItem("playerId");
-if (playerId === null) {
-  playerId = crypto.randomUUID();
-  localStorage.setItem("playerId", playerId);
-}
-let username = localStorage.getItem("username");
-let countryCode = localStorage.getItem("countryCode");
+let username = "";
+let countryCode = "";
 let myPlayer = "";
 let opponentUsername = "";
 let opponentCountryCode = "";
@@ -25,6 +59,7 @@ const saveProfileButton = document.getElementById("saveProfileButton");
 
 const lobbyScreen = document.querySelector("#lobbyScreen");
 const playButton = document.querySelector("#playButton");
+const logoutButton = document.querySelector("#logoutButton");
 
 const waitingScreen = document.querySelector("#waitingScreen");
 const cancelSearch = document.querySelector("#cancelSearch");
@@ -47,15 +82,23 @@ const gameMySymbol = document.querySelector("#gameMySymbol");
 const gameOpponentUsername = document.querySelector("#gameOpponentUsername");
 const gameOpponentSymbol = document.querySelector("#gameOpponentSymbol");
 
+const authScreen = document.getElementById("authScreen");
+const emailInput = document.getElementById("emailInput");
+const passwordInput = document.getElementById("passwordInput");
+const signUpButton = document.getElementById("signUpButton");
+const loginButton = document.getElementById("loginButton");
+const googleLoginButton = document.getElementById("googleLoginButton");
+const authMessage = document.getElementById("authMessage");
+
 //▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲
 
-if (username === null || countryCode === null) {
-  profileSetupScreen.style.display = "block";
-  lobbyScreen.style.display = "none";
-} else {
-  profileSetupScreen.style.display = "none";
-  lobbyScreen.style.display = "block";
-}
+// if (username === null || countryCode === null) {
+//   profileSetupScreen.style.display = "block";
+//   lobbyScreen.style.display = "none";
+// } else {
+//   profileSetupScreen.style.display = "none";
+//   lobbyScreen.style.display = "block";
+// }
 
 //▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲
 
@@ -485,31 +528,40 @@ countryCodes.forEach(function (countryCode) {
 
 //▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼
 
-saveProfileButton.addEventListener("click", function () {
+saveProfileButton.addEventListener("click", async function () {
   const enteredUsername = usernameInput.value.trim();
   const selectedCountryCode = countrySelect.value;
-
   if (enteredUsername === "" || selectedCountryCode === "") {
     return;
   }
-
+  const user = auth.currentUser;
+  if (user === null) {
+    return;
+  }
+  const userDocRef = doc(db, "users", user.uid);
+  await setDoc(userDocRef, {
+    username: enteredUsername,
+    countryCode: selectedCountryCode,
+  });
   username = enteredUsername;
   countryCode = selectedCountryCode;
-
-  localStorage.setItem("username", username);
-  localStorage.setItem("countryCode", countryCode);
-
+  console.log("Profile saved to Firestore");
   profileSetupScreen.style.display = "none";
   lobbyScreen.style.display = "block";
 });
 
 //••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••
 
-playButton.addEventListener("click", function () {
+playButton.addEventListener("click", async function () {
   console.log("Play clicked");
+  const user = auth.currentUser;
+  if (user === null) {
+    return;
+  }
+  const idToken = await user.getIdToken();
   socket = io({
     auth: {
-      playerId: playerId,
+      token: idToken,
       username: username,
       countryCode: countryCode,
     },
@@ -546,4 +598,109 @@ cancelSearch.addEventListener("click", function () {
     waitingScreen.style.display = "none";
     lobbyScreen.style.display = "block";
   });
+});
+
+//••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••
+
+signUpButton.addEventListener("click", function () {
+  const email = emailInput.value.trim();
+  const password = passwordInput.value;
+  if (email === "" || password === "") {
+    authMessage.textContent = "Please enter your email and password.";
+    return;
+  }
+  createUserWithEmailAndPassword(auth, email, password)
+    .then(function (userCredential) {
+      console.log("Account created:", userCredential.user);
+      authMessage.textContent = "Account created successfully!";
+    })
+    .catch(function (error) {
+      console.log("Sign up error:", error);
+      authMessage.textContent = error.message;
+    });
+});
+
+//••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••
+
+logoutButton.addEventListener("click", function () {
+  signOut(auth)
+    .then(function () {
+      console.log("User logged out");
+    })
+    .catch(function (error) {
+      console.log("Logout error:", error);
+    });
+});
+
+//••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••
+
+loginButton.addEventListener("click", function () {
+  const email = emailInput.value.trim();
+  const password = passwordInput.value;
+  if (email === "" || password === "") {
+    authMessage.textContent = "Please enter your email and password.";
+    return;
+  }
+  signInWithEmailAndPassword(auth, email, password)
+    .then(function (userCredential) {
+      console.log("User logged in:", userCredential.user.uid);
+      authMessage.textContent = "";
+    })
+    .catch(function (error) {
+      console.log("Login error:", error);
+      authMessage.textContent = error.message;
+    });
+});
+
+//••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••
+
+googleLoginButton.addEventListener("click", function () {
+  signInWithPopup(auth, googleProvider)
+    .then(function (result) {
+      console.log("Google login successful:", result.user.uid);
+      authMessage.textContent = "";
+    })
+    .catch(function (error) {
+      console.log("Google login error:", error);
+      authMessage.textContent = error.message;
+    });
+});
+
+//▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼
+
+onAuthStateChanged(auth, async function (user) {
+  if (user) {
+    console.log("User is logged in:", user.uid);
+
+    authScreen.style.display = "none";
+
+    const userDocRef = doc(db, "users", user.uid);
+    // را میسازد Document هنوز چیزی از دیتابیس نمی‌خواند. فقط آدرس
+    //  باشد user/a12asfd45fd ادرس میشود a12asfd45fd باشد UID مثلاً اگر
+    const userDocSnap = await getDoc(userDocRef);
+    // اینجا واقعاً می‌رویم  فایرستور و می‌گوییم داکیومنت این آدرس را بخوان.
+
+    if (userDocSnap.exists()) {
+      const userData = userDocSnap.data();
+
+      username = userData.username;
+      countryCode = userData.countryCode;
+
+      console.log("Profile loaded:", userData);
+
+      profileSetupScreen.style.display = "none";
+      lobbyScreen.style.display = "block";
+    } else {
+      console.log("No profile found");
+
+      profileSetupScreen.style.display = "block";
+      lobbyScreen.style.display = "none";
+    }
+  } else {
+    console.log("User is logged out");
+
+    authScreen.style.display = "block";
+    profileSetupScreen.style.display = "none";
+    lobbyScreen.style.display = "none";
+  }
 });

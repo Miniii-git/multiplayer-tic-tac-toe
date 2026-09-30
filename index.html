@@ -8,6 +8,25 @@
   </head>
 
   <body>
+    <div id="authScreen">
+      <h1>Tic Tac Toe</h1>
+
+      <h2>Welcome</h2>
+
+      <input type="email" id="emailInput" placeholder="Email" />
+
+      <input type="password" id="passwordInput" placeholder="Password" />
+
+      <button id="signUpButton">Sign Up</button>
+      <button id="loginButton">Log In</button>
+
+      <p>or</p>
+
+      <button id="googleLoginButton">Continue with Google</button>
+
+      <p id="authMessage"></p>
+    </div>
+    <!-------------------------------------------------------------------------->
     <div id="profileSetupScreen">
       <h1>Tic Tac Toe</h1>
       <h2>Create your profile</h2>
@@ -25,14 +44,14 @@
       <button id="saveProfileButton">Continue</button>
     </div>
 
-    <!------------------------------------------------------->
+    <!-------------------------------------------------------------------------->
 
     <div id="lobbyScreen">
       <h1>Tic Tac Toe</h1>
       <button id="playButton">Play</button>
+      <button id="logoutButton">Log Out</button>
     </div>
-
-    <!------------------------------------------------------->
+    <!-------------------------------------------------------------------------->
 
     <div id="waitingScreen">
       <h2>Finding an opponent...</h2>
@@ -40,7 +59,7 @@
       <button id="cancelSearch">Cancel</button>
     </div>
 
-    <!------------------------------------------------------->
+    <!-------------------------------------------------------------------------->
 
     <div id="matchFoundScreen">
       <h2>Opponent Found!</h2>
@@ -61,7 +80,7 @@
       <p id="countdown">3</p>
     </div>
 
-    <!------------------------------------------------------->
+    <!-------------------------------------------------------------------------->
 
     <div id="gameScreen">
       <button id="leaveGame">Leave Game</button>
@@ -105,9 +124,9 @@
       <button id="restart">Restart</button>
     </div>
 
-    <!------------------------------------------------------->
+    <!-------------------------------------------------------------------------->
 
     <script src="/socket.io/socket.io.js"></script>
-    <script src="script.js"></script>
+    <script type="module" src="script.js"></script>
   </body>
 </html>
