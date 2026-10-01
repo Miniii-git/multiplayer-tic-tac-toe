@@ -2223,13 +2223,33 @@ body {
 =========================================================================================================== */
 
 @media (max-width: 750px) {
+  /* =========================================
+     GAME SCREEN
+  ============================================ */
+
   #gameScreen {
-    padding: 80px 12px 30px;
+    height: 100dvh;
+    min-height: 100dvh;
+
+    padding: max(60px, env(safe-area-inset-top)) 12px
+      max(12px, env(safe-area-inset-bottom));
+
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    box-sizing: border-box;
   }
 
   #leaveGame {
     top: 15px;
     left: 15px;
+  }
+
+  .gameHeader {
+    margin-bottom: 10px;
   }
 
   .gameHeader h1 {
@@ -2251,48 +2271,22 @@ body {
     align-items: center;
     gap: 8px;
 
-    margin-left: auto;
+    margin-top: 0;
     margin-right: auto;
+    margin-bottom: 12px;
+    margin-left: auto;
   }
 
   .gamePlayer {
     width: 100%;
     min-width: 0;
-    min-height: 100px;
+    min-height: 82px;
 
-    padding: 12px 10px;
+    padding: 8px 10px;
   }
 
   .playerAvatar {
     display: none;
-  }
-
-  .playerText p {
-    max-width: 90px;
-    font-size: 16px;
-  }
-
-  #gameMySymbol,
-  #gameOpponentSymbol {
-    font-size: 42px;
-  }
-
-  .versus {
-    font-size: 17px;
-  }
-
-  .game {
-    grid-template-columns: repeat(3, 85px);
-    gap: 7px;
-
-    padding: 10px;
-  }
-
-  .cell {
-    width: 85px;
-    height: 85px;
-
-    font-size: 50px;
   }
 
   .playerText {
@@ -2301,7 +2295,45 @@ body {
 
   .playerText p {
     max-width: 75px;
+    font-size: 16px;
   }
+
+  #gameMySymbol,
+  #gameOpponentSymbol {
+    font-size: 36px;
+  }
+
+  .versus {
+    font-size: 17px;
+  }
+
+  .game {
+    grid-template-columns: repeat(3, min(23vw, 72px));
+
+    gap: 6px;
+    padding: 8px;
+
+    margin: 0 auto 10px;
+  }
+
+  .cell {
+    width: min(23vw, 72px);
+    height: min(23vw, 72px);
+
+    font-size: 44px;
+  }
+
+  #message {
+    margin: 4px 0 10px;
+  }
+
+  #restart {
+    margin-bottom: 0;
+  }
+
+  /* ====================================
+     LOGIN
+  ==================================== */
 
   #authScreen {
     padding: 25px 18px;
@@ -2328,6 +2360,10 @@ body {
     padding: 25px 20px;
   }
 
+  /* ==========================================
+     PROFILE
+  ============================================ */
+
   #profileSetupScreen {
     padding: 25px 18px;
   }
@@ -2352,6 +2388,10 @@ body {
   .profileCard {
     padding: 25px 20px;
   }
+
+  /* ===================================
+     LOBBY
+  ===================================== */
 
   #lobbyScreen {
     padding: 25px 18px;
@@ -2383,6 +2423,10 @@ body {
     font-size: 62px;
   }
 
+  /* ========================================
+     FINDING OPPONENT
+  ========================================= */
+
   #waitingScreen {
     padding: 25px 18px;
   }
@@ -2412,6 +2456,10 @@ body {
     width: 135px;
     height: 135px;
   }
+
+  /* ===================================
+     MATCH FOUND
+  ==================================== */
 
   #matchFoundScreen {
     padding: 25px 14px;
@@ -2465,6 +2513,10 @@ body {
     font-size: 52px;
   }
 
+  /* ======================================
+     REGISTER
+  ====================================== */
+
   #registerScreen {
     padding: 22px 16px;
   }
@@ -2502,10 +2554,9 @@ body {
     margin-bottom: 15px;
   }
 }
-
-/* =========================
+/* ===========================================================================================
    FLAGS
-========================= */
+=========================================================================================== */
 
 .playerNameRow {
   display: flex;
@@ -2524,9 +2575,9 @@ body {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
 }
 
-/* =========================
+/* ====================================================================================================
    Fixing Height
-========================= */
+==================================================================================================== */
 
 html,
 body {
@@ -2543,7 +2594,8 @@ body {
   overflow-x: hidden;
 }
 
-#lobbyScreen {
+#lobbyScreen,
+#waitingScreen {
   height: 100dvh;
   min-height: 100dvh;
   overflow: hidden;
