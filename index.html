@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="style.css" />
   </head>
 
-  <body>
+  <body class="auth-loading">
     <div id="authScreen">
       <div class="authContainer">
         <div class="authHeader">
@@ -58,6 +58,90 @@
         </div>
       </div>
     </div>
+
+    <!---------------------- CREATE ACCOUNT ---------------------->
+
+    <div id="registerScreen">
+      <div class="registerContainer">
+        <div class="registerHeader">
+          <h1>TIC TAC TOE</h1>
+          <p>ONLINE MULTIPLAYER</p>
+        </div>
+
+        <div class="registerCard">
+          <div class="registerTitle">
+            <h2>Create Account</h2>
+            <p>Create your profile and start playing</p>
+          </div>
+
+          <div class="registerFields">
+            <label for="registerEmailInput">EMAIL</label>
+            <input
+              type="email"
+              id="registerEmailInput"
+              placeholder="Enter your email"
+              autocomplete="email"
+            />
+
+            <label for="registerPasswordInput">PASSWORD</label>
+            <input
+              type="password"
+              id="registerPasswordInput"
+              placeholder="Create a password"
+              autocomplete="new-password"
+            />
+
+            <label for="registerUsernameInput">USERNAME</label>
+            <input
+              type="text"
+              id="registerUsernameInput"
+              placeholder="Choose your username"
+              maxlength="20"
+              autocomplete="off"
+            />
+
+            <label>COUNTRY</label>
+
+            <div class="registerCountryDropdown">
+              <button
+                type="button"
+                id="registerCountryDropdownButton"
+                class="registerCountryDropdownButton"
+              >
+                <span id="registerSelectedCountryContent">
+                  Select your country
+                </span>
+
+                <span class="countryArrow">⌄</span>
+              </button>
+
+              <div id="registerCountryDropdownMenu" class="countryDropdownMenu">
+                <input
+                  type="text"
+                  id="registerCountrySearchInput"
+                  placeholder="Search country..."
+                  autocomplete="off"
+                />
+
+                <div id="registerCountryOptions"></div>
+              </div>
+            </div>
+
+            <input type="hidden" id="registerCountrySelect" value="" />
+          </div>
+
+          <button id="createAccountButton">Create Account</button>
+
+          <div class="registerLoginLink">
+            <span>Already have an account?</span>
+            <button type="button" id="backToLoginButton">Log In</button>
+          </div>
+
+          <p id="registerMessage"></p>
+        </div>
+      </div>
+    </div>
+
     <!-------------------------------------------------------------------------->
     <div id="profileSetupScreen">
       <div class="profileContainer">

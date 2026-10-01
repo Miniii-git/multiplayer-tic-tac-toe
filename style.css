@@ -30,6 +30,20 @@ body {
   display: none;
 }
 
+#registerScreen {
+  display: none;
+}
+
+.auth-loading #authScreen,
+.auth-loading #registerScreen,
+.auth-loading #profileSetupScreen,
+.auth-loading #lobbyScreen,
+.auth-loading #waitingScreen,
+.auth-loading #matchFoundScreen,
+.auth-loading #gameScreen {
+  display: none !important;
+}
+
 /* =========================
    GAME SCREEN
 ========================= */
@@ -994,35 +1008,85 @@ body {
 
 .countryDropdownMenu {
   position: absolute;
-
   top: calc(100% + 7px);
   left: 0;
-
   width: 100%;
-
   padding: 10px;
-
   display: none;
-
   z-index: 1000;
-
   background: #0b1b3b;
-
   border: 1px solid #455f91;
   border-radius: 14px;
-
   box-shadow:
     0 18px 40px rgba(0, 0, 0, 0.55),
     0 0 20px rgba(53, 199, 255, 0.08);
+  overflow: hidden;
 }
 
 .countryDropdownMenu.open {
   display: block;
 }
 
-/* rotate arrow when open */
+/* SEARCH */
 
-.countryDropdown:has(.countryDropdownMenu.open) .countryArrow {
+.countryDropdownMenu input {
+  width: 100%;
+  height: 40px;
+  padding: 0 12px;
+  margin-bottom: 8px;
+  color: #ffffff;
+  background: #12264a;
+  border: 1px solid #405b8d;
+  border-radius: 9px;
+  outline: none;
+  font-family: inherit;
+  font-size: 13px;
+  box-sizing: border-box;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.countryDropdownMenu input::placeholder {
+  color: #788cac;
+}
+
+.countryDropdownMenu input:focus {
+  border-color: #35c7ff;
+  box-shadow: 0 0 0 3px rgba(53, 199, 255, 0.08);
+}
+
+/* COUNTRY LIST */
+
+#countryOptions,
+#registerCountryOptions {
+  max-height: 180px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* SCROLLBAR */
+
+#countryOptions::-webkit-scrollbar,
+#registerCountryOptions::-webkit-scrollbar {
+  width: 6px;
+}
+
+#countryOptions::-webkit-scrollbar-track,
+#registerCountryOptions::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#countryOptions::-webkit-scrollbar-thumb,
+#registerCountryOptions::-webkit-scrollbar-thumb {
+  background: #405b8d;
+  border-radius: 10px;
+}
+
+/* ROTATE ARROW WHEN OPEN */
+
+.countryDropdown:has(.countryDropdownMenu.open) .countryArrow,
+.registerCountryDropdown:has(.countryDropdownMenu.open) .countryArrow {
   transform: rotate(180deg);
 }
 
@@ -1032,18 +1096,13 @@ body {
 
 #countrySearchInput {
   width: 100%;
-
   margin: 0 0 9px;
   padding: 11px 12px;
-
   color: white;
   background: #11264d;
-
   border: 1px solid #455f91;
   border-radius: 9px;
-
   outline: none;
-
   font-size: 14px;
 }
 
@@ -1872,6 +1931,293 @@ body {
   }
 }
 
+/* =========================
+   REGISTER SCREEN
+========================= */
+
+#registerScreen {
+  min-height: 100vh;
+  padding: 35px 20px;
+
+  background:
+    radial-gradient(
+      circle at 20% 30%,
+      rgba(0, 174, 255, 0.12),
+      transparent 35%
+    ),
+    radial-gradient(
+      circle at 80% 30%,
+      rgba(255, 50, 100, 0.1),
+      transparent 35%
+    ),
+    linear-gradient(180deg, #07142d 0%, #020817 100%);
+}
+
+.registerContainer {
+  width: 100%;
+  max-width: 430px;
+  margin: 0 auto;
+}
+
+/* HEADER */
+
+.registerHeader {
+  margin-bottom: 24px;
+}
+
+.registerHeader h1 {
+  margin: 0;
+
+  font-size: clamp(38px, 6vw, 58px);
+  letter-spacing: 4px;
+
+  color: #f4f7ff;
+
+  text-shadow:
+    0 0 8px rgba(255, 255, 255, 0.4),
+    0 0 25px rgba(40, 130, 255, 0.35);
+}
+
+.registerHeader p {
+  margin: 8px 0 0;
+
+  color: #75b8ff;
+
+  font-size: 11px;
+  letter-spacing: 5px;
+}
+
+/* CARD */
+
+.registerCard {
+  padding: 28px 30px;
+
+  background: rgba(7, 19, 43, 0.82);
+
+  border: 1px solid #3d5686;
+  border-radius: 24px;
+
+  box-shadow:
+    0 25px 60px rgba(0, 0, 0, 0.4),
+    0 0 30px rgba(52, 105, 210, 0.12);
+
+  backdrop-filter: blur(12px);
+}
+
+/* TITLE */
+
+.registerTitle {
+  margin-bottom: 24px;
+}
+
+.registerTitle h2 {
+  margin: 0 0 7px;
+
+  font-size: 28px;
+}
+
+.registerTitle p {
+  margin: 0;
+
+  color: #8da8d5;
+  font-size: 14px;
+}
+
+/* FIELDS */
+
+.registerFields {
+  text-align: left;
+}
+
+.registerFields label {
+  display: block;
+
+  margin: 0 0 7px;
+
+  color: #8da8d5;
+
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: 1.5px;
+}
+
+.registerFields > input {
+  width: 100%;
+
+  margin-bottom: 18px;
+  padding: 14px 15px;
+
+  color: white;
+  background: rgba(15, 32, 67, 0.9);
+
+  border: 1px solid #455f91;
+  border-radius: 12px;
+
+  outline: none;
+
+  font-size: 15px;
+
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.registerFields > input::placeholder {
+  color: #7183a6;
+}
+
+.registerFields > input:focus {
+  border-color: #35c7ff;
+
+  box-shadow:
+    0 0 0 3px rgba(53, 199, 255, 0.08),
+    0 0 15px rgba(53, 199, 255, 0.12);
+}
+
+/* =========================
+   REGISTER COUNTRY
+========================= */
+
+.registerCountryDropdown {
+  position: relative;
+
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.registerCountryDropdownButton {
+  width: 100%;
+  height: 48px;
+
+  padding: 0 14px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  color: white;
+  background: rgba(15, 32, 67, 0.9);
+
+  border: 1px solid #455f91;
+  border-radius: 12px;
+
+  font-size: 15px;
+
+  cursor: pointer;
+
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.registerCountryDropdownButton:hover {
+  border-color: #6d89bb;
+}
+
+.registerCountryDropdownButton:focus {
+  border-color: #35c7ff;
+  outline: none;
+
+  box-shadow:
+    0 0 0 3px rgba(53, 199, 255, 0.08),
+    0 0 15px rgba(53, 199, 255, 0.12);
+}
+
+#registerSelectedCountryContent {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+/* REGISTER DROPDOWN POSITION */
+
+.registerCountryDropdown .countryDropdownMenu {
+  width: 100%;
+}
+
+/* =========================
+   CREATE ACCOUNT BUTTON
+========================= */
+
+#createAccountButton {
+  width: 100%;
+
+  padding: 14px;
+
+  color: white;
+
+  background: linear-gradient(135deg, #6636e8, #4320b5);
+
+  border: 1px solid #8c6cff;
+  border-radius: 13px;
+
+  font-size: 16px;
+  font-weight: bold;
+
+  cursor: pointer;
+
+  box-shadow: 0 8px 25px rgba(89, 46, 220, 0.3);
+
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+}
+
+#createAccountButton:hover {
+  transform: translateY(-2px);
+
+  box-shadow: 0 10px 30px rgba(101, 58, 235, 0.45);
+}
+
+/* BACK TO LOGIN */
+
+.registerLoginLink {
+  margin-top: 20px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+
+  color: #8299c1;
+
+  font-size: 13px;
+}
+
+#backToLoginButton {
+  padding: 0;
+
+  color: #70cfff;
+  background: transparent;
+
+  border: none;
+
+  font-size: 13px;
+  font-weight: bold;
+
+  cursor: pointer;
+}
+
+#backToLoginButton:hover {
+  color: white;
+  text-decoration: underline;
+}
+
+/* ERROR / STATUS MESSAGE */
+
+#registerMessage {
+  min-height: 18px;
+
+  margin: 12px 0 0;
+
+  color: #ff7189;
+
+  font-size: 12px;
+}
+
 /* ===========================================================================================================
    MOBILE
 =========================================================================================================== */
@@ -2117,6 +2463,43 @@ body {
 
   #countdown {
     font-size: 52px;
+  }
+
+  #registerScreen {
+    padding: 22px 16px;
+  }
+
+  .registerContainer {
+    max-width: 380px;
+  }
+
+  .registerHeader {
+    margin-bottom: 18px;
+  }
+
+  .registerHeader h1 {
+    font-size: 38px;
+  }
+
+  .registerHeader p {
+    font-size: 9px;
+    letter-spacing: 4px;
+  }
+
+  .registerCard {
+    padding: 24px 20px;
+  }
+
+  .registerTitle {
+    margin-bottom: 20px;
+  }
+
+  .registerTitle h2 {
+    font-size: 25px;
+  }
+
+  .registerFields > input {
+    margin-bottom: 15px;
   }
 }
 

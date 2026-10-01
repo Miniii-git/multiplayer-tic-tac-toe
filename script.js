@@ -49,6 +49,7 @@ let opponentCountryCode = "";
 let socket;
 let currentPlayer = "X";
 let gameOver = false;
+let isCreatingAccount = false;
 
 //▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲
 
@@ -98,6 +99,31 @@ const signUpButton = document.getElementById("signUpButton");
 const loginButton = document.getElementById("loginButton");
 const googleLoginButton = document.getElementById("googleLoginButton");
 const authMessage = document.getElementById("authMessage");
+
+const registerScreen = document.querySelector("#registerScreen");
+const createAccountButton = document.querySelector("#createAccountButton");
+const backToLoginButton = document.querySelector("#backToLoginButton");
+const registerEmailInput = document.querySelector("#registerEmailInput");
+const registerPasswordInput = document.querySelector("#registerPasswordInput");
+const registerUsernameInput = document.querySelector("#registerUsernameInput");
+const registerCountrySelect = document.querySelector("#registerCountrySelect");
+const registerMessage = document.querySelector("#registerMessage");
+
+const registerCountryDropdownButton = document.querySelector(
+  "#registerCountryDropdownButton",
+);
+const registerSelectedCountryContent = document.querySelector(
+  "#registerSelectedCountryContent",
+);
+const registerCountryDropdownMenu = document.querySelector(
+  "#registerCountryDropdownMenu",
+);
+const registerCountrySearchInput = document.querySelector(
+  "#registerCountrySearchInput",
+);
+const registerCountryOptions = document.querySelector(
+  "#registerCountryOptions",
+);
 
 //▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲
 
@@ -527,15 +553,11 @@ const regionNames = new Intl.DisplayNames(["en"], {
 
 countryCodes.forEach(function (code) {
   const countryName = regionNames.of(code);
-
   const option = document.createElement("button");
-
   option.type = "button";
   option.classList.add("countryOption");
-
   option.dataset.code = code;
   option.dataset.name = countryName.toLowerCase();
-
   option.innerHTML = `
     <img
       src="flags/${code.toLowerCase()}.svg"
@@ -545,10 +567,8 @@ countryCodes.forEach(function (code) {
 
     <span>${countryName}</span>
   `;
-
   option.addEventListener("click", function () {
     countrySelect.value = code;
-
     selectedCountryContent.innerHTML = `
       <img
         src="flags/${code.toLowerCase()}.svg"
@@ -558,16 +578,74 @@ countryCodes.forEach(function (code) {
 
       <span>${countryName}</span>
     `;
-
     countryDropdownMenu.classList.remove("open");
-
     countrySearchInput.value = "";
-
     filterCountries("");
   });
-
   countryOptions.appendChild(option);
 });
+
+countryCodes.forEach(function (code) {
+  const countryName = regionNames.of(code);
+  const option = document.createElement("button");
+  option.type = "button";
+  option.classList.add("countryOption");
+  option.dataset.code = code;
+  option.dataset.name = countryName.toLowerCase();
+  option.innerHTML = `
+    <img
+      src="flags/${code.toLowerCase()}.svg"
+      alt="${countryName}"
+      class="countryOptionFlag"
+    >
+
+    <span>${countryName}</span>
+  `;
+  option.addEventListener("click", function () {
+    registerCountrySelect.value = code;
+    registerSelectedCountryContent.innerHTML = `
+      <img
+        src="flags/${code.toLowerCase()}.svg"
+        alt="${countryName}"
+        class="selectedCountryFlag"
+      >
+
+      <span>${countryName}</span>
+    `;
+    registerCountryDropdownMenu.classList.remove("open");
+    registerCountrySearchInput.value = "";
+    filterRegisterCountries("");
+  });
+  registerCountryOptions.appendChild(option);
+});
+
+registerCountryDropdownButton.addEventListener("click", function () {
+  registerCountryDropdownMenu.classList.toggle("open");
+  if (registerCountryDropdownMenu.classList.contains("open")) {
+    registerCountrySearchInput.focus();
+  }
+});
+
+registerCountrySearchInput.addEventListener("input", function () {
+  filterRegisterCountries(registerCountrySearchInput.value);
+});
+
+function filterRegisterCountries(searchText) {
+  const search = searchText.toLowerCase().trim();
+
+  const options = registerCountryOptions.querySelectorAll(".countryOption");
+
+  options.forEach(function (option) {
+    const countryName = option.dataset.name;
+    const countryCode = option.dataset.code.toLowerCase();
+
+    if (countryName.includes(search) || countryCode.includes(search)) {
+      option.style.display = "flex";
+    } else {
+      option.style.display = "none";
+    }
+  });
+}
 
 countryDropdownButton.addEventListener("click", function () {
   countryDropdownMenu.classList.toggle("open");
@@ -584,7 +662,7 @@ countrySearchInput.addEventListener("input", function () {
 function filterCountries(searchText) {
   const search = searchText.toLowerCase().trim();
 
-  const options = document.querySelectorAll(".countryOption");
+  const options = countryOptions.querySelectorAll(".countryOption");
 
   options.forEach(function (option) {
     const countryName = option.dataset.name;
@@ -601,6 +679,10 @@ function filterCountries(searchText) {
 document.addEventListener("click", function (event) {
   if (!event.target.closest(".countryDropdown")) {
     countryDropdownMenu.classList.remove("open");
+  }
+
+  if (!event.target.closest(".registerCountryDropdown")) {
+    registerCountryDropdownMenu.classList.remove("open");
   }
 });
 
@@ -626,6 +708,56 @@ saveProfileButton.addEventListener("click", async function () {
   console.log("Profile saved to Firestore");
   profileSetupScreen.style.display = "none";
   lobbyScreen.style.display = "block";
+});
+
+//••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••
+
+createAccountButton.addEventListener("click", async function () {
+  const email = registerEmailInput.value.trim();
+  const password = registerPasswordInput.value;
+  const enteredUsername = registerUsernameInput.value.trim();
+  const selectedCountryCode = registerCountrySelect.value;
+  registerMessage.textContent = "";
+  // Check all fields
+  if (
+    email === "" ||
+    password === "" ||
+    enteredUsername === "" ||
+    selectedCountryCode === ""
+  ) {
+    registerMessage.textContent = "Please complete all fields.";
+    return;
+  }
+  try {
+    // Create Firebase account
+    isCreatingAccount = true;
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password,
+    );
+    const user = userCredential.user;
+    // Create Firestore profile
+    const userDocRef = doc(db, "users", user.uid);
+    await setDoc(userDocRef, {
+      username: enteredUsername,
+      countryCode: selectedCountryCode,
+    });
+    // Save locally for the game
+    username = enteredUsername;
+    countryCode = selectedCountryCode;
+    isCreatingAccount = false;
+    console.log("Account and profile created:", user.uid);
+    registerScreen.style.display = "none";
+    profileSetupScreen.style.display = "none";
+    authScreen.style.display = "none";
+    lobbyScreen.style.display = "block";
+    document.body.classList.remove("auth-loading");
+  } catch (error) {
+    isCreatingAccount = false;
+    console.log("Create account error:", error);
+    registerMessage.textContent = getAuthErrorMessage(error);
+  }
 });
 
 //••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••
@@ -681,21 +813,17 @@ cancelSearch.addEventListener("click", function () {
 //••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••
 
 signUpButton.addEventListener("click", function () {
-  const email = emailInput.value.trim();
-  const password = passwordInput.value;
-  if (email === "" || password === "") {
-    authMessage.textContent = "Please enter your email and password.";
-    return;
-  }
-  createUserWithEmailAndPassword(auth, email, password)
-    .then(function (userCredential) {
-      console.log("Account created:", userCredential.user);
-      authMessage.textContent = "Account created successfully!";
-    })
-    .catch(function (error) {
-      console.log("Sign up error:", error);
-      authMessage.textContent = error.message;
-    });
+  authScreen.style.display = "none";
+  registerScreen.style.display = "block";
+
+  authMessage.textContent = "";
+});
+
+backToLoginButton.addEventListener("click", function () {
+  registerScreen.style.display = "none";
+  authScreen.style.display = "block";
+
+  registerMessage.textContent = "";
 });
 
 //••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••
@@ -726,7 +854,7 @@ loginButton.addEventListener("click", function () {
     })
     .catch(function (error) {
       console.log("Login error:", error);
-      authMessage.textContent = error.message;
+      authMessage.textContent = getAuthErrorMessage(error);
     });
 });
 
@@ -749,8 +877,12 @@ googleLoginButton.addEventListener("click", function () {
 onAuthStateChanged(auth, async function (user) {
   if (user) {
     console.log("User is logged in:", user.uid);
-
+    if (isCreatingAccount) {
+      console.log("Account creation in progress...");
+      return;
+    }
     authScreen.style.display = "none";
+    registerScreen.style.display = "none";
 
     const userDocRef = doc(db, "users", user.uid);
     // را میسازد Document هنوز چیزی از دیتابیس نمی‌خواند. فقط آدرس
@@ -760,25 +892,57 @@ onAuthStateChanged(auth, async function (user) {
 
     if (userDocSnap.exists()) {
       const userData = userDocSnap.data();
-
       username = userData.username;
       countryCode = userData.countryCode;
-
       console.log("Profile loaded:", userData);
-
       profileSetupScreen.style.display = "none";
       lobbyScreen.style.display = "block";
+      document.body.classList.remove("auth-loading");
     } else {
       console.log("No profile found");
-
       profileSetupScreen.style.display = "block";
       lobbyScreen.style.display = "none";
+      document.body.classList.remove("auth-loading");
     }
   } else {
     console.log("User is logged out");
-
     authScreen.style.display = "block";
+    registerScreen.style.display = "none";
     profileSetupScreen.style.display = "none";
     lobbyScreen.style.display = "none";
+    document.body.classList.remove("auth-loading");
   }
 });
+
+//-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
+
+function getAuthErrorMessage(error) {
+  switch (error.code) {
+    case "auth/email-already-in-use":
+      return "This email is already registered.";
+
+    case "auth/invalid-email":
+      return "Please enter a valid email address.";
+
+    case "auth/weak-password":
+      return "Password must be at least 6 characters.";
+
+    case "auth/invalid-credential":
+      return "Incorrect email or password.";
+
+    case "auth/user-disabled":
+      return "This account has been disabled.";
+
+    case "auth/too-many-requests":
+      return "Too many attempts. Please try again later.";
+
+    case "auth/network-request-failed":
+      return "Network error. Please check your connection.";
+
+    case "auth/popup-closed-by-user":
+      return "Google sign-in was cancelled.";
+
+    default:
+      return "Something went wrong. Please try again.";
+  }
+}
