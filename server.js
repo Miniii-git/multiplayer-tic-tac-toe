@@ -15,7 +15,13 @@ const io = new Server(myServer);
 
 const { initializeApp, cert } = require("firebase-admin/app");
 const { getAuth } = require("firebase-admin/auth");
-const serviceAccount = require("./serviceAccountKey.json");
+
+let serviceAccount;
+if (process.env.RENDER) {
+  serviceAccount = require("/etc/secrets/serviceAccountKey.json");
+} else {
+  serviceAccount = require("./serviceAccountKey.json");
+}
 
 initializeApp({
   credential: cert(serviceAccount),
