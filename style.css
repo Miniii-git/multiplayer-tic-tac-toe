@@ -439,40 +439,28 @@ body {
 ========================= */
 
 #authScreen {
-  height: 100dvh;
-  min-height: 100dvh;
-
-  padding: 16px 18px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  overflow: hidden;
+  padding: 25px 18px;
 }
 
 .authContainer {
-  width: 100%;
   max-width: 380px;
 }
 
 .authHeader {
-  margin-bottom: 14px;
+  margin-bottom: 24px;
 }
 
 .authHeader h1 {
-  font-size: 36px;
+  font-size: 38px;
 }
 
 .authHeader p {
-  margin-top: 4px;
-
   font-size: 9px;
   letter-spacing: 4px;
 }
 
 .authCard {
-  padding: 20px;
+  padding: 25px 20px;
 }
 
 .authWelcome {
