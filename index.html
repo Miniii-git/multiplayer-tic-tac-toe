@@ -9,102 +9,290 @@
 
   <body>
     <div id="authScreen">
-      <h1>Tic Tac Toe</h1>
+      <div class="authContainer">
+        <div class="authHeader">
+          <h1>TIC TAC TOE</h1>
+          <p>ONLINE MULTIPLAYER</p>
+        </div>
 
-      <h2>Welcome</h2>
+        <div class="authCard">
+          <div class="authWelcome">
+            <h2>Welcome</h2>
+            <p>Sign in to play online</p>
+          </div>
 
-      <input type="email" id="emailInput" placeholder="Email" />
+          <div class="authFields">
+            <label for="emailInput">EMAIL</label>
+            <input
+              type="email"
+              id="emailInput"
+              placeholder="Enter your email"
+            />
 
-      <input type="password" id="passwordInput" placeholder="Password" />
+            <label for="passwordInput">PASSWORD</label>
+            <input
+              type="password"
+              id="passwordInput"
+              placeholder="Enter your password"
+            />
+          </div>
 
-      <button id="signUpButton">Sign Up</button>
-      <button id="loginButton">Log In</button>
+          <button id="loginButton" class="primaryAuthButton">Log In</button>
 
-      <p>or</p>
+          <button id="signUpButton" class="secondaryAuthButton">
+            Create Account
+          </button>
 
-      <button id="googleLoginButton">Continue with Google</button>
+          <div class="authDivider">
+            <span></span>
+            <p>OR</p>
+            <span></span>
+          </div>
 
-      <p id="authMessage"></p>
+          <button id="googleLoginButton">
+            <span class="googleIcon">G</span>
+            Continue with Google
+          </button>
+
+          <p id="authMessage"></p>
+        </div>
+      </div>
     </div>
     <!-------------------------------------------------------------------------->
     <div id="profileSetupScreen">
-      <h1>Tic Tac Toe</h1>
-      <h2>Create your profile</h2>
-      <input
-        type="text"
-        id="usernameInput"
-        placeholder="Enter your username"
-        maxlength="20"
-      />
-      <label for="countrySelect">Country</label>
+      <div class="profileContainer">
+        <div class="profileHeader">
+          <h1>TIC TAC TOE</h1>
+          <p>ONLINE MULTIPLAYER</p>
+        </div>
 
-      <select id="countrySelect">
-        <option value="">Select your country</option>
-      </select>
-      <button id="saveProfileButton">Continue</button>
+        <div class="profileCard">
+          <div class="profileTitle">
+            <h2>Create your profile</h2>
+            <p>Choose how other players will see you</p>
+          </div>
+
+          <div class="profileFields">
+            <label for="usernameInput">USERNAME</label>
+
+            <input
+              type="text"
+              id="usernameInput"
+              placeholder="Enter your username"
+              maxlength="20"
+            />
+
+            <label>COUNTRY</label>
+
+            <div class="countryDropdown">
+              <button
+                type="button"
+                id="countryDropdownButton"
+                class="countryDropdownButton"
+              >
+                <span id="selectedCountryContent"> Select your country </span>
+
+                <span class="countryArrow">⌄</span>
+              </button>
+
+              <div id="countryDropdownMenu" class="countryDropdownMenu">
+                <input
+                  type="text"
+                  id="countrySearchInput"
+                  placeholder="Search country..."
+                  autocomplete="off"
+                />
+
+                <div id="countryOptions"></div>
+              </div>
+            </div>
+
+            <!-- این input مخفی countryCode انتخاب‌شده را نگه می‌دارد.
+             ID قبلی را حفظ می‌کنیم تا کدهای دیگرمان همچنان
+             بتوانند از countrySelect.value استفاده کنند.-->
+
+            <input type="hidden" id="countrySelect" value="" />
+          </div>
+
+          <button id="saveProfileButton">
+            Continue
+            <span>→</span>
+          </button>
+        </div>
+      </div>
     </div>
 
     <!-------------------------------------------------------------------------->
 
     <div id="lobbyScreen">
-      <h1>Tic Tac Toe</h1>
-      <button id="playButton">Play</button>
-      <button id="logoutButton">Log Out</button>
+      <div class="lobbyContainer">
+        <div class="lobbyHeader">
+          <h1>TIC TAC TOE</h1>
+          <p>ONLINE MULTIPLAYER</p>
+        </div>
+
+        <div class="lobbyCard">
+          <div class="lobbyIcon">
+            <span class="lobbyX">X</span>
+            <span class="lobbyO">O</span>
+          </div>
+
+          <div class="lobbyTitle">
+            <h2>Ready to play?</h2>
+            <p>Find an opponent and start a match</p>
+          </div>
+
+          <button id="playButton">
+            <span>▶</span>
+            PLAY ONLINE
+          </button>
+
+          <button id="logoutButton">Log Out</button>
+        </div>
+      </div>
     </div>
     <!-------------------------------------------------------------------------->
 
     <div id="waitingScreen">
-      <h2>Finding an opponent...</h2>
+      <div class="waitingContainer">
+        <div class="waitingHeader">
+          <h1>TIC TAC TOE</h1>
+          <p>ONLINE MULTIPLAYER</p>
+        </div>
 
-      <button id="cancelSearch">Cancel</button>
+        <div class="waitingCard">
+          <div class="searchAnimation">
+            <div class="searchCircle circleOne"></div>
+            <div class="searchCircle circleTwo"></div>
+
+            <div class="searchXO">
+              <span class="searchX">X</span>
+              <span class="searchO">O</span>
+            </div>
+          </div>
+
+          <div class="waitingTitle">
+            <h2>Finding an opponent</h2>
+            <p>Searching for another player...</p>
+          </div>
+
+          <div class="searchingDots">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+
+          <button id="cancelSearch">Cancel Search</button>
+        </div>
+      </div>
     </div>
-
     <!-------------------------------------------------------------------------->
 
     <div id="matchFoundScreen">
-      <h2>Opponent Found!</h2>
-      <div id="playersMatchup">
-        <div>
-          <p id="myUsername"></p>
-          <p id="mySymbol"></p>
+      <div class="matchFoundContainer">
+        <div class="matchFoundHeader">
+          <h1>TIC TAC TOE</h1>
+          <p>ONLINE MULTIPLAYER</p>
         </div>
 
-        <p>VS</p>
+        <div class="matchFoundCard">
+          <div class="foundBadge">
+            <span class="foundCheck">✓</span>
+            OPPONENT FOUND
+          </div>
 
-        <div>
-          <p id="opponentName"></p>
-          <p id="opponentSymbol"></p>
+          <h2>Match Ready!</h2>
+          <p class="matchSubtitle">Your game is about to begin</p>
+
+          <div id="playersMatchup">
+            <div class="matchPlayer matchPlayerBlue">
+              <p id="myUsername"></p>
+              <p class="matchPlayerLabel">YOU</p>
+              <p id="mySymbol"></p>
+            </div>
+
+            <div class="matchVs">VS</div>
+
+            <div class="matchPlayer matchPlayerPink">
+              <p id="opponentName"></p>
+              <p class="matchPlayerLabel">OPPONENT</p>
+              <p id="opponentSymbol"></p>
+            </div>
+          </div>
+
+          <div class="getReady">
+            <p>GET READY</p>
+
+            <div id="countdown">3</div>
+
+            <span>Game starting...</span>
+          </div>
         </div>
       </div>
-      <p>Get ready...</p>
-      <p id="countdown">3</p>
     </div>
-
     <!-------------------------------------------------------------------------->
 
     <div id="gameScreen">
-      <button id="leaveGame">Leave Game</button>
+      <!-- Leave button -->
+      <button id="leaveGame">
+        <span class="leaveArrow">←</span>
+        Leave Game
+      </button>
 
+      <!-- Notifications from server -->
       <div id="notification"></div>
 
-      <h1>Tic Tac Toe</h1>
+      <!-- Game title -->
+      <div class="gameHeader">
+        <h1>TIC TAC TOE</h1>
+        <p>ONLINE MULTIPLAYER</p>
+      </div>
 
+      <!-- Players -->
       <div id="gamePlayers">
-        <div class="gamePlayer">
-          <p id="gameMyUsername"></p>
+        <!-- Me -->
+        <div class="gamePlayer playerXCard">
+          <div class="playerInfo">
+            <div class="playerAvatar">👤</div>
+
+            <div class="playerText">
+              <div class="playerNameRow">
+                <img id="gameMyFlag" class="playerFlag" alt="" />
+                <p id="gameMyUsername"></p>
+              </div>
+
+              <span class="playerLabel">YOU</span>
+            </div>
+          </div>
+
           <p id="gameMySymbol"></p>
-          <p>YOU</p>
         </div>
 
-        <p>VS</p>
+        <!-- VS -->
+        <div class="versus">
+          <span>VS</span>
+        </div>
 
-        <div class="gamePlayer">
-          <p id="gameOpponentUsername"></p>
+        <!-- Opponent -->
+        <div class="gamePlayer playerOCard">
+          <div class="playerInfo">
+            <div class="playerAvatar">👤</div>
+
+            <div class="playerText">
+              <div class="playerNameRow">
+                <img id="gameOpponentFlag" class="playerFlag" alt="" />
+                <p id="gameOpponentUsername"></p>
+              </div>
+
+              <span class="playerLabel">OPPONENT</span>
+            </div>
+          </div>
+
           <p id="gameOpponentSymbol"></p>
-          <p>OPPONENT</p>
         </div>
       </div>
 
+      <!-- Board -->
       <div class="game">
         <button class="cell"></button>
         <button class="cell"></button>
@@ -119,9 +307,17 @@
         <button class="cell"></button>
       </div>
 
-      <p id="message">Player X's turn</p>
+      <!-- Turn -->
+      <div class="turnBox">
+        <span class="turnIcon">◷</span>
+        <p id="message">Player X's turn</p>
+      </div>
 
-      <button id="restart">Restart</button>
+      <!-- Restart -->
+      <button id="restart">
+        <span>↻</span>
+        Restart Game
+      </button>
     </div>
 
     <!-------------------------------------------------------------------------->

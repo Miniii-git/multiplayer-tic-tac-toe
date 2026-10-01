@@ -56,6 +56,13 @@ const profileSetupScreen = document.getElementById("profileSetupScreen");
 const usernameInput = document.getElementById("usernameInput");
 const countrySelect = document.getElementById("countrySelect");
 const saveProfileButton = document.getElementById("saveProfileButton");
+const countryDropdownButton = document.querySelector("#countryDropdownButton");
+const selectedCountryContent = document.querySelector(
+  "#selectedCountryContent",
+);
+const countryDropdownMenu = document.querySelector("#countryDropdownMenu");
+const countrySearchInput = document.querySelector("#countrySearchInput");
+const countryOptions = document.querySelector("#countryOptions");
 
 const lobbyScreen = document.querySelector("#lobbyScreen");
 const playButton = document.querySelector("#playButton");
@@ -81,6 +88,8 @@ const gameMyUsername = document.querySelector("#gameMyUsername");
 const gameMySymbol = document.querySelector("#gameMySymbol");
 const gameOpponentUsername = document.querySelector("#gameOpponentUsername");
 const gameOpponentSymbol = document.querySelector("#gameOpponentSymbol");
+const gameMyFlag = document.querySelector("#gameMyFlag");
+const gameOpponentFlag = document.querySelector("#gameOpponentFlag");
 
 const authScreen = document.getElementById("authScreen");
 const emailInput = document.getElementById("emailInput");
@@ -92,27 +101,22 @@ const authMessage = document.getElementById("authMessage");
 
 //▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲
 
-// if (username === null || countryCode === null) {
-//   profileSetupScreen.style.display = "block";
-//   lobbyScreen.style.display = "none";
-// } else {
-//   profileSetupScreen.style.display = "none";
-//   lobbyScreen.style.display = "block";
-// }
-
-//▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲
-
 function setupSocketListeners() {
   socket.on("player", function (player) {
     myPlayer = player;
 
     // Match Found screen
-    myUsername.textContent = countryCodeToFlag(countryCode) + " " + username;
+    myUsername.innerHTML = `<img
+    src="flags/${countryCode.toLowerCase()}.svg"
+    class="playerFlag"
+    alt="${countryCode}"><span>${username}</span>`;
+
     mySymbol.textContent = myPlayer;
 
     // Game screen
-    gameMyUsername.textContent =
-      countryCodeToFlag(countryCode) + " " + username;
+    gameMyUsername.textContent = username;
+    gameMyFlag.src = "flags/" + countryCode.toLowerCase() + ".svg";
+    gameMyFlag.alt = countryCode;
     gameMySymbol.textContent = myPlayer;
 
     if (myPlayer === "X") {
@@ -131,10 +135,17 @@ function setupSocketListeners() {
     opponentUsername = data.username;
     opponentCountryCode = data.countryCode;
 
-    opponentName.textContent =
-      countryCodeToFlag(opponentCountryCode) + " " + opponentUsername;
-    gameOpponentUsername.textContent =
-      countryCodeToFlag(opponentCountryCode) + " " + opponentUsername;
+    // Match Found screen
+    opponentName.innerHTML = `<img src="flags/${opponentCountryCode.toLowerCase()}.svg" class="playerFlag"
+    alt="${opponentCountryCode}"><span>${opponentUsername}</span>`;
+
+    // Game screen
+    gameOpponentUsername.textContent = opponentUsername;
+
+    gameOpponentFlag.src =
+      "flags/" + opponentCountryCode.toLowerCase() + ".svg";
+
+    gameOpponentFlag.alt = opponentCountryCode;
 
     console.log("Opponent username:", opponentUsername);
     console.log("Opponent country:", opponentCountryCode);
@@ -514,16 +525,83 @@ const regionNames = new Intl.DisplayNames(["en"], {
   type: "region",
 });
 
-countryCodes.forEach(function (countryCode) {
-  const option = document.createElement("option");
+countryCodes.forEach(function (code) {
+  const countryName = regionNames.of(code);
 
-  const countryName = regionNames.of(countryCode);
-  const flag = countryCodeToFlag(countryCode);
+  const option = document.createElement("button");
 
-  option.value = countryCode;
-  option.textContent = flag + " " + countryName;
+  option.type = "button";
+  option.classList.add("countryOption");
 
-  countrySelect.appendChild(option);
+  option.dataset.code = code;
+  option.dataset.name = countryName.toLowerCase();
+
+  option.innerHTML = `
+    <img
+      src="flags/${code.toLowerCase()}.svg"
+      alt="${countryName}"
+      class="countryOptionFlag"
+    >
+
+    <span>${countryName}</span>
+  `;
+
+  option.addEventListener("click", function () {
+    countrySelect.value = code;
+
+    selectedCountryContent.innerHTML = `
+      <img
+        src="flags/${code.toLowerCase()}.svg"
+        alt="${countryName}"
+        class="selectedCountryFlag"
+      >
+
+      <span>${countryName}</span>
+    `;
+
+    countryDropdownMenu.classList.remove("open");
+
+    countrySearchInput.value = "";
+
+    filterCountries("");
+  });
+
+  countryOptions.appendChild(option);
+});
+
+countryDropdownButton.addEventListener("click", function () {
+  countryDropdownMenu.classList.toggle("open");
+
+  if (countryDropdownMenu.classList.contains("open")) {
+    countrySearchInput.focus();
+  }
+});
+
+countrySearchInput.addEventListener("input", function () {
+  filterCountries(countrySearchInput.value);
+});
+
+function filterCountries(searchText) {
+  const search = searchText.toLowerCase().trim();
+
+  const options = document.querySelectorAll(".countryOption");
+
+  options.forEach(function (option) {
+    const countryName = option.dataset.name;
+    const countryCode = option.dataset.code.toLowerCase();
+
+    if (countryName.includes(search) || countryCode.includes(search)) {
+      option.style.display = "flex";
+    } else {
+      option.style.display = "none";
+    }
+  });
+}
+
+document.addEventListener("click", function (event) {
+  if (!event.target.closest(".countryDropdown")) {
+    countryDropdownMenu.classList.remove("open");
+  }
 });
 
 //▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼▲▼
