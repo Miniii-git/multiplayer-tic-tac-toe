@@ -2230,16 +2230,9 @@ body {
   #gameScreen {
     height: 100dvh;
     min-height: 100dvh;
-
     padding: max(60px, env(safe-area-inset-top)) 12px
       max(12px, env(safe-area-inset-bottom));
-
     overflow: hidden;
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
     box-sizing: border-box;
   }
 

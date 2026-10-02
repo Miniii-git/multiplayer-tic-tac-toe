@@ -267,6 +267,10 @@ function setupSocketListeners() {
   //→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→
 
   socket.on("startGame", function () {
+    authScreen.style.display = "none";
+    registerScreen.style.display = "none";
+    profileSetupScreen.style.display = "none";
+    lobbyScreen.style.display = "none";
     waitingScreen.style.display = "none";
     matchFoundScreen.style.display = "none";
     gameScreen.style.display = "block";
